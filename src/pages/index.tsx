@@ -1,67 +1,54 @@
-import Link from 'next/link'
+import axios from 'axios'
+import { NextPage } from 'next'
 import Header from '../components/header'
-import ExtLink from '../components/ext-link'
-import Features from '../components/features'
-import GitHub from '../components/svgs/github'
-import sharedStyles from '../styles/shared.module.css'
+import { postIsReady } from '../lib/blog-helpers'
+import { useMemo } from 'react'
+import PostsList from '../components/PostsList'
 
-export default () => (
-  <>
-    <Header titlePre="Home" />
-    <div className={sharedStyles.layout}>
-      <img
-        src="/zeit-and-notion.png"
-        height="85"
-        width="250"
-        alt="ZEIT + Notion"
-      />
-      <h1>My Notion Blog</h1>
-      <h2>
-        Blazing Fast Notion Blog with Next.js'{' '}
-        <ExtLink
-          href="https://github.com/zeit/next.js/issues/9524"
-          className="dotted"
-          style={{ color: 'inherit' }}
-        >
-          SSG
-        </ExtLink>
-      </h2>
+interface IndexProps {
+  postsTable: [any]
+}
 
-      <Features />
+function getPostsDisplay(postsTable) {
+  const authorsToGet: Set<string> = new Set()
+  const posts: any[] = Object.keys(postsTable)
+    .map(slug => {
+      const post = postsTable[slug]
+      // remove draft posts in production
+      if (!postIsReady(post)) {
+        return null
+      }
+      post.Authors = post.Authors || []
+      for (const author of post.Authors) {
+        authorsToGet.add(author)
+      }
+      return post
+    })
+    .filter(Boolean)
 
-      <div className="explanation">
-        <p>
-          This is a statically generated{' '}
-          <ExtLink href="https://nextjs.org">Next.js</ExtLink> site with a{' '}
-          <ExtLink href="https://notion.so">Notion</ExtLink> powered blog that
-          is deployed with <ExtLink href="https://zeit.co">ZEIT</ExtLink>. It
-          leverages some upcoming features in Next.js like{' '}
-          <ExtLink href="https://github.com/zeit/next.js/issues/9524">
-            SSG support
-          </ExtLink>{' '}
-          and{' '}
-          <ExtLink href="https://github.com/zeit/next.js/issues/8626">
-            built-in CSS support
-          </ExtLink>{' '}
-          which allow us to achieve all of the benefits listed above including
-          blazing fast speeds, great local editing experience, and always being
-          available!
-        </p>
+  return posts
+}
 
-        <p>
-          Get started by creating a new page in Notion and clicking the deploy
-          button below. After you supply your token and the blog index id (the
-          page's id in Notion) we will automatically create the table for you!
-          See{' '}
-          <ExtLink href="https://github.com/ijjk/notion-blog#getting-blog-index-and-token">
-            here in the readme
-          </ExtLink>{' '}
-          for finding the new page's id. To get your token from Notion, login
-          and look for a cookie under www.notion.so with the name `token_v2`.
-          After finding your token and your blog's page id you should be good to
-          go!
-        </p>
+const Index: NextPage<IndexProps> = ({ postsTable = [] }) => {
+  const posts = useMemo(() => getPostsDisplay(postsTable), [postsTable])
+  console.log(posts)
+  return (
+    <>
+      <Header />
+      <div>
+        <h1>My Notion Blog</h1>
+        {posts.length === 0 && <p>There are no posts yet</p>}
+        {posts.length > 0 && <PostsList posts={posts} />}
       </div>
-    </div>
-  </>
-)
+    </>
+  )
+}
+
+Index.getInitialProps = async () => {
+  const response = await axios.get('http://localhost:3000/api/post')
+  return {
+    postsTable: response.data,
+  }
+}
+
+export default Index
