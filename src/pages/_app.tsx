@@ -1,10 +1,18 @@
-import '../styles/global.css'
-import ExtLink from '../components/ext-link'
+import { ThemeProvider } from 'styled-components'
+import GlobalStyle from '../styles/globalStyles'
+
+const theme = {
+  colors: {
+    primary: '#0070f3',
+  },
+}
 
 export default ({ Component, pageProps }) => (
   <>
-    <Component {...pageProps} />
-
+    <GlobalStyle />
+    <ThemeProvider theme={theme}>
+      <Component {...pageProps} />
+    </ThemeProvider>
     <footer></footer>
   </>
 )

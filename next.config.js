@@ -46,7 +46,12 @@ module.exports = {
 
   webpack(cfg, { dev, isServer }) {
     // only compile build-rss in production server build
-    if (dev || !isServer) return cfg
+    if (dev || !isServer) {
+      cfg.node = {
+        fs: 'empty',
+      }
+      return cfg
+    }
 
     const originalEntry = cfg.entry
     cfg.entry = async () => {
