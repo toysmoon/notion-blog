@@ -14,12 +14,15 @@
   },
   "dependencies": {
     "@zeit/react-jsx-parser": "^2.0.0",
+    "axios": "^0.19.1",
     "dotenv": "^8.2.0",
     "github-slugger": "^1.2.1",
-    "next": "^9.1.8-canary.11",
+    "next": "^9.2.0",
     "prismjs": "^1.17.1",
     "react": "16.12.0",
-    "react-dom": "16.12.0"
+    "react-dom": "16.12.0",
+    "styled-components": "^5.0.0",
+    "styled-reset": "^4.0.9"
   },
   "devDependencies": {
     "@types/node": "^13.1.2",
