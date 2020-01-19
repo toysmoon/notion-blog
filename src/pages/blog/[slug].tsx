@@ -9,6 +9,7 @@ import getPageData from '../../lib/notion/getPageData'
 import getBlogIndex from '../../lib/notion/getBlogIndex'
 import getNotionUsers from '../../lib/notion/getNotionUsers'
 import { getBlogLink, getDateStr } from '../../lib/blog-helpers'
+import BlogLayout from '../../containers/Blog/layout'
 
 // Get the data for each blog post
 export async function unstable_getStaticProps({ params: { slug } }) {
@@ -66,161 +67,163 @@ const RenderPost = ({ post, redirect }) => {
   return (
     <>
       <Header titlePre={post.Page} />
-      <div>
-        <h1>{post.Page || ''}</h1>
-        {post.Authors.length > 0 && (
-          <div className="authors">By: {post.Authors.join(' ')}</div>
-        )}
-        {post.Date && (
-          <div className="posted">Posted: {getDateStr(post.Date)}</div>
-        )}
+      <BlogLayout>
+        <div>
+          <h1>{post.Page || ''}</h1>
+          {post.Authors.length > 0 && (
+            <div className="authors">By: {post.Authors.join(' ')}</div>
+          )}
+          {post.Date && (
+            <div className="posted">Posted: {getDateStr(post.Date)}</div>
+          )}
 
-        <hr />
+          <hr />
 
-        {(!post.content || post.content.length === 0) && (
-          <p>This post has no content</p>
-        )}
+          {(!post.content || post.content.length === 0) && (
+            <p>This post has no content</p>
+          )}
 
-        {(post.content || []).map((block, blockIdx) => {
-          const { value } = block
-          const { type, properties, id } = value
-          const isLast = blockIdx === post.content.length - 1
-          const isList = listTypes.has(type)
-          let toRender = []
+          {(post.content || []).map((block, blockIdx) => {
+            const { value } = block
+            const { type, properties, id } = value
+            const isLast = blockIdx === post.content.length - 1
+            const isList = listTypes.has(type)
+            let toRender = []
 
-          if (isList) {
-            listTagName = components[type === 'bulleted_list' ? 'ul' : 'ol']
-            listLastId = `list${id}`
-            listChildren.push(
-              React.createElement(
-                components.li || 'li',
-                { key: id } as any,
-                textBlock(properties.title, true, id)
+            if (isList) {
+              listTagName = components[type === 'bulleted_list' ? 'ul' : 'ol']
+              listLastId = `list${id}`
+              listChildren.push(
+                React.createElement(
+                  components.li || 'li',
+                  { key: id } as any,
+                  textBlock(properties.title, true, id)
+                )
               )
-            )
-          }
-
-          if (listTagName && (isLast || !isList)) {
-            toRender.push(
-              React.createElement(
-                listTagName,
-                { key: listLastId! },
-                ...listChildren
-              )
-            )
-            listChildren = []
-            listLastId = null
-            listTagName = null
-          }
-
-          const renderHeading = (Type: string | React.ComponentType) => {
-            toRender.push(
-              <Heading key={id}>
-                <Type key={id}>{textBlock(properties.title, true, id)}</Type>
-              </Heading>
-            )
-          }
-
-          console.log(`${type} - ${properties?.title}`)
-          switch (type) {
-            case 'page':
-            case 'divider':
-              break
-            case 'text':
-              if (properties) {
-                toRender.push(textBlock(properties.title, false, id))
-              }
-              break
-            case 'image':
-            case 'video': {
-              const { format = {} } = value
-              const { block_width } = format
-              const baseBlockWidth = 768
-              const roundFactor = Math.pow(10, 2)
-              // calculate percentages
-              const width = block_width
-                ? `${Math.round(
-                    (block_width / baseBlockWidth) * 100 * roundFactor
-                  ) / roundFactor}%`
-                : '100%'
-
-              const isImage = type === 'image'
-              const Comp = isImage ? 'img' : 'video'
-
-              toRender.push(
-                <Comp
-                  key={id}
-                  src={`/api/asset?assetUrl=${encodeURIComponent(
-                    format.display_source as any
-                  )}&blockId=${id}`}
-                  controls={!isImage}
-                  alt={isImage ? 'An image from Notion' : undefined}
-                  loop={!isImage}
-                  muted={!isImage}
-                  autoPlay={!isImage}
-                  style={{ width }}
-                />
-              )
-              break
             }
-            case 'header':
-              renderHeading('h1')
-              break
-            case 'sub_header':
-              renderHeading('h2')
-              break
-            case 'sub_sub_header':
-              renderHeading('h3')
-              break
-            case 'code': {
-              if (properties.title) {
-                const content = properties.title[0][0]
-                const language = properties.language[0][0]
 
-                if (language === 'LiveScript') {
-                  // this requires the DOM for now
+            if (listTagName && (isLast || !isList)) {
+              toRender.push(
+                React.createElement(
+                  listTagName,
+                  { key: listLastId! },
+                  ...listChildren
+                )
+              )
+              listChildren = []
+              listLastId = null
+              listTagName = null
+            }
+
+            const renderHeading = (Type: string | React.ComponentType) => {
+              toRender.push(
+                <Heading key={id}>
+                  <Type key={id}>{textBlock(properties.title, true, id)}</Type>
+                </Heading>
+              )
+            }
+
+            console.log(`${type} - ${properties?.title}`)
+            switch (type) {
+              case 'page':
+              case 'divider':
+                break
+              case 'text':
+                if (properties) {
+                  toRender.push(textBlock(properties.title, false, id))
+                }
+                break
+              case 'image':
+              case 'video': {
+                const { format = {} } = value
+                const { block_width } = format
+                const baseBlockWidth = 768
+                const roundFactor = Math.pow(10, 2)
+                // calculate percentages
+                const width = block_width
+                  ? `${Math.round(
+                      (block_width / baseBlockWidth) * 100 * roundFactor
+                    ) / roundFactor}%`
+                  : '100%'
+
+                const isImage = type === 'image'
+                const Comp = isImage ? 'img' : 'video'
+
+                toRender.push(
+                  <Comp
+                    key={id}
+                    src={`/api/asset?assetUrl=${encodeURIComponent(
+                      format.display_source as any
+                    )}&blockId=${id}`}
+                    controls={!isImage}
+                    alt={isImage ? 'An image from Notion' : undefined}
+                    loop={!isImage}
+                    muted={!isImage}
+                    autoPlay={!isImage}
+                    style={{ width }}
+                  />
+                )
+                break
+              }
+              case 'header':
+                renderHeading('h1')
+                break
+              case 'sub_header':
+                renderHeading('h2')
+                break
+              case 'sub_sub_header':
+                renderHeading('h3')
+                break
+              case 'code': {
+                if (properties.title) {
+                  const content = properties.title[0][0]
+                  const language = properties.language[0][0]
+
+                  if (language === 'LiveScript') {
+                    // this requires the DOM for now
+                    toRender.push(
+                      <ReactJSXParser
+                        key={id}
+                        jsx={content}
+                        components={components}
+                        componentsOnly={false}
+                        renderInpost={false}
+                        allowUnknownElements={true}
+                        blacklistedTags={['script', 'style']}
+                      />
+                    )
+                  } else {
+                    toRender.push(
+                      <components.Code key={id}>{content}</components.Code>
+                    )
+                  }
+                }
+                break
+              }
+              case 'quote':
+                if (properties.title) {
                   toRender.push(
-                    <ReactJSXParser
-                      key={id}
-                      jsx={content}
-                      components={components}
-                      componentsOnly={false}
-                      renderInpost={false}
-                      allowUnknownElements={true}
-                      blacklistedTags={['script', 'style']}
-                    />
-                  )
-                } else {
-                  toRender.push(
-                    <components.Code key={id}>{content}</components.Code>
+                    React.createElement(
+                      components.blockquote,
+                      { key: id },
+                      properties.title
+                    )
                   )
                 }
-              }
-              break
+                break
+              default:
+                if (
+                  process.env.NODE_ENV !== 'production' &&
+                  !listTypes.has(type)
+                ) {
+                  console.log('unknown type', type)
+                }
+                break
             }
-            case 'quote':
-              if (properties.title) {
-                toRender.push(
-                  React.createElement(
-                    components.blockquote,
-                    { key: id },
-                    properties.title
-                  )
-                )
-              }
-              break
-            default:
-              if (
-                process.env.NODE_ENV !== 'production' &&
-                !listTypes.has(type)
-              ) {
-                console.log('unknown type', type)
-              }
-              break
-          }
-          return toRender
-        })}
-      </div>
+            return toRender
+          })}
+        </div>
+      </BlogLayout>
     </>
   )
 }
