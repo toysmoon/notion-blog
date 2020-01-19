@@ -1,22 +1,27 @@
 import Head from 'next/head'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import styled from 'styled-components'
 
 const ogImageUrl = 'https://notion-blog.now.sh/og-image.png'
 
+const StyledHedaer = styled.header`
+  height: 40px;
+`
+
 const StyledNavigation = styled.ul`
   list-style: none;
   border-bottom: solid 1px;
-  height: 45px;
   display: flex;
   align-items: center;
+  height: 40px;
   li {
     flex: 1;
     font-size: 20px;
     font-weight: bold;
     line-height: 45px;
-    height: 45px;
     padding-left: 10px;
+    height: 40px;
   }
   li + li {
     border-left: solid 1px;
@@ -27,7 +32,7 @@ export default ({ titlePre = '' }) => {
   const { pathname } = useRouter()
 
   return (
-    <header>
+    <StyledHedaer>
       <Head>
         <title>{titlePre ? `${titlePre} |` : ''} Sungjung's Blog</title>
         <meta
@@ -41,10 +46,12 @@ export default ({ titlePre = '' }) => {
         <meta name="twitter:image" content={ogImageUrl} />
       </Head>
       <StyledNavigation>
-        <li>SUNGJUNG BLOG</li>
+        <Link href="/">
+          <li>SUNGJUNG BLOG</li>
+        </Link>
         <li></li>
         <li></li>
       </StyledNavigation>
-    </header>
+    </StyledHedaer>
   )
 }
