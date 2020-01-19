@@ -29,7 +29,7 @@ const Blog = ({ children }) => {
   const [postsTable, setPostsTable] = useState([])
   const posts = useMemo(() => getPostsDisplay(postsTable), [postsTable])
   const getPostsTable = async () => {
-    const response = await axios.get('http://localhost:3000/api/post')
+    const response = await axios.get('/api/post')
     setPostsTable(response.data)
     setIsLoading(false)
   }
