@@ -1,4 +1,4 @@
-import axios from 'axios'
+import api from '../../lib/api'
 import Router from 'next/router'
 import Header from '../../components/header'
 import { useEffect } from 'react'
@@ -31,8 +31,8 @@ const Blog = ({ posts }) => {
 }
 
 Blog.getInitialProps = async ({ req }) => {
-  const baseUrl = req ? 'http://localhost:3000' : ''
-  const postsTable = (await axios.get(`${baseUrl}/api/post`)).data
+  const isServer = !!req
+  const postsTable = await api.get(`/api/post`, isServer)
   const posts = Object.keys(postsTable)
 
   return { posts }

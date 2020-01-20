@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import getNotionAssetUrls from '../../../lib/notion/getNotionAssetUrls'
 import { setHeaders, handleData, handleError } from '../../../lib/notion/utils'
+import getPageData from '../../../lib/notion/getPageData'
 
 export default async function getPosts(
   req: NextApiRequest,
@@ -8,9 +8,7 @@ export default async function getPosts(
 ) {
   if (setHeaders(req, res)) return
   try {
-    const {
-      query: { slug },
-    } = req
+    handleData(res, await getPageData(req.query.slug))
   } catch (error) {
     handleError(res, error)
   }
