@@ -1,8 +1,10 @@
 const fs = require('fs')
 const path = require('path')
+
 const {
   NOTION_TOKEN,
   BLOG_INDEX_ID,
+  BASE_URL,
 } = require('./src/lib/notion/server-constants')
 
 try {
@@ -43,7 +45,11 @@ if (!BLOG_INDEX_ID) {
 
 module.exports = {
   target: 'experimental-serverless-trace',
-
+  env: {
+    NOTION_TOKEN,
+    BLOG_INDEX_ID,
+    BASE_URL,
+  },
   webpack(cfg, { dev, isServer }) {
     // only compile build-rss in production server build
     if (dev || !isServer) {

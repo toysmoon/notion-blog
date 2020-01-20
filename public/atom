@@ -4,13 +4,13 @@
     <subtitle>Blog</subtitle>
     <link href="/atom" rel="self" type="application/rss+xml"/>
     <link href="/" />
-    <updated>2020-01-20T01:42:48.036Z</updated>
+    <updated>2020-01-20T07:55:29.227Z</updated>
     <id>Sungjung's Blog</id>
     <entry>
       <id>/blog/react-helmet</id>
       <title>React Helmet</title>
       <link href="/blog/react-helmet"/>
-      <updated>2019-12-16T15:00:00.117Z</updated>
+      <updated>2019-12-16T15:00:00.248Z</updated>
       <content type="xhtml">
         <div xmlns="http://www.w3.org/1999/xhtml">
           <p></p><p>document head 의 모든 변경 사항을 관리할 수 있는 재사용 가능한 React Component</p><p>Installation</p>
@@ -25,7 +25,7 @@
       <id>/blog/react-ssr-data-load</id>
       <title>React SSR 데이터 로딩하기</title>
       <link href="/blog/react-ssr-data-load"/>
-      <updated>2019-12-22T15:00:00.117Z</updated>
+      <updated>2019-12-22T15:00:00.249Z</updated>
       <content type="xhtml">
         <div xmlns="http://www.w3.org/1999/xhtml">
           

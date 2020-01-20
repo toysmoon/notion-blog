@@ -1,6 +1,6 @@
 import rpc, { values } from './rpc'
 
-export default async function getPageData(pageId: string) {
+export default async function getPageData(pageId: any) {
   try {
     const data = await loadPageChunk({ pageId })
     const blocks = values(data.recordMap.block)

@@ -2,11 +2,13 @@
   "build": {
     "env": {
       "NOTION_TOKEN": "@notion-token",
-      "BLOG_INDEX_ID": "@blog-index-id"
+      "BLOG_INDEX_ID": "@blog-index-id",
+      "BASE_URL": "@base-url"
     }
   },
   "env": {
     "NOTION_TOKEN": "@notion-token",
-    "BLOG_INDEX_ID": "@blog-index-id"
+    "BLOG_INDEX_ID": "@blog-index-id",
+    "BASE_URL": "@base-url"
   }
 }
