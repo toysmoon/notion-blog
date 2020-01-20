@@ -1,14 +1,11 @@
 import React from 'react'
 import Head from 'next/head'
-import axios from 'axios'
+import api from '../../lib/api'
 import Header from '../../components/header'
 import Heading from '../../components/heading'
 import components from '../../components/dynamic'
 import ReactJSXParser from '@zeit/react-jsx-parser'
 import { textBlock } from '../../lib/notion/renderers'
-import getPageData from '../../lib/notion/getPageData'
-import getBlogIndex from '../../lib/notion/getBlogIndex'
-import getNotionUsers from '../../lib/notion/getNotionUsers'
 import { getDateStr } from '../../lib/blog-helpers'
 import BlogLayout from '../../containers/Blog/layout'
 
@@ -36,7 +33,6 @@ const RenderPost = ({ post, postsTable, slug, redirect }) => {
       <BlogLayout postsTable={postsTable} slug={slug}>
         <div>
           <h1>{post.Page || ''}</h1>
-          {post.Authors.length > 0 && <div>By: {post.Authors.join(' ')}</div>}
           {post.Date && <div>Posted: {getDateStr(post.Date)}</div>}
 
           <hr />
@@ -189,9 +185,9 @@ const RenderPost = ({ post, postsTable, slug, redirect }) => {
 }
 
 RenderPost.getInitialProps = async ({ query, req }) => {
-  const baseUrl = req ? 'http://localhost:3000' : ''
+  const isServer = !!req
   const slug = query.slug
-  const postsTable = (await axios.get(`${baseUrl}/api/post`)).data
+  const postsTable = await api.get(`/api/post`, isServer)
   const post = postsTable[slug]
 
   if (!post) {
@@ -199,12 +195,8 @@ RenderPost.getInitialProps = async ({ query, req }) => {
       redirect: '/blog',
     }
   }
-
-  const postData = await getPageData(post.id)
+  const postData = await api.get(`/api/post/${post.id}`, isServer)
   post.content = postData.blocks
-
-  const { users } = await getNotionUsers(post.Authors || [])
-  post.Authors = Object.keys(users).map(id => users[id].full_name)
 
   return {
     post,
