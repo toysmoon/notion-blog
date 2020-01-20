@@ -26,11 +26,12 @@ const StyledNavigation = styled.ul`
   li + li {
     border-left: solid 1px;
   }
+  :first-child {
+    cursor: pointer;
+  }
 `
 
 export default ({ titlePre = '' }) => {
-  const { pathname } = useRouter()
-
   return (
     <StyledHedaer>
       <Head>
@@ -41,7 +42,7 @@ export default ({ titlePre = '' }) => {
         />
         <meta name="og:title" content="Sungjung's Blog" />
         <meta property="og:image" content={ogImageUrl} />
-        <meta name="twitter:site" content="@_ijjk" />
+        <meta name="twitter:site" content="@toysmoon2" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:image" content={ogImageUrl} />
       </Head>

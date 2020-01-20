@@ -1,6 +1,5 @@
 import { postIsReady } from '../../lib/blog-helpers'
-import axios from 'axios'
-import { useMemo, useEffect, useState } from 'react'
+import { useMemo } from 'react'
 import PostsList from '../../components/PostsList'
 import { StyledWrapper, StyledListWrapper, StyledContent } from './style'
 
@@ -24,25 +23,14 @@ function getPostsDisplay(postsTable) {
   return posts
 }
 
-const Blog = ({ children }) => {
-  const [isLoading, setIsLoading] = useState(true)
-  const [postsTable, setPostsTable] = useState([])
+const Blog = ({ postsTable, slug, children }) => {
   const posts = useMemo(() => getPostsDisplay(postsTable), [postsTable])
-  const getPostsTable = async () => {
-    const response = await axios.get('/api/post')
-    setPostsTable(response.data)
-    setIsLoading(false)
-  }
-  useEffect(() => {
-    getPostsTable()
-  }, [])
 
   return (
     <StyledWrapper>
       <StyledListWrapper>
-        {isLoading && <p>loading...</p>}
-        {!isLoading && posts.length === 0 && <p>There are no posts yet</p>}
-        {posts.length > 0 && <PostsList posts={posts} />}
+        {posts.length === 0 && <p>There are no posts yet</p>}
+        {posts.length > 0 && <PostsList posts={posts} slug={slug} />}
       </StyledListWrapper>
       <StyledContent>{children}</StyledContent>
     </StyledWrapper>
