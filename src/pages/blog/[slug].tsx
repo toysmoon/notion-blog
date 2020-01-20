@@ -188,9 +188,10 @@ const RenderPost = ({ post, postsTable, slug, redirect }) => {
   )
 }
 
-RenderPost.getInitialProps = async ({ query }) => {
+RenderPost.getInitialProps = async ({ query, req }) => {
+  const baseUrl = req ? 'http://localhost:3000' : ''
   const slug = query.slug
-  const postsTable = (await axios.get('http://localhost:3000/api/post')).data
+  const postsTable = (await axios.get(`${baseUrl}/api/post`)).data
   const post = postsTable[slug]
 
   if (!post) {

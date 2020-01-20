@@ -30,8 +30,9 @@ const Blog = ({ posts }) => {
   )
 }
 
-Blog.getInitialProps = async () => {
-  const postsTable = (await axios.get('http://localhost:3000/api/post')).data
+Blog.getInitialProps = async ({ req }) => {
+  const baseUrl = req ? 'http://localhost:3000' : ''
+  const postsTable = (await axios.get(`${baseUrl}/api/post`)).data
   const posts = Object.keys(postsTable)
 
   return { posts }
