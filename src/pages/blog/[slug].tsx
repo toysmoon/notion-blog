@@ -1,5 +1,6 @@
 import React from 'react'
 import Head from 'next/head'
+import axios from 'axios'
 import Header from '../../components/header'
 import Heading from '../../components/heading'
 import components from '../../components/dynamic'
@@ -8,47 +9,12 @@ import { textBlock } from '../../lib/notion/renderers'
 import getPageData from '../../lib/notion/getPageData'
 import getBlogIndex from '../../lib/notion/getBlogIndex'
 import getNotionUsers from '../../lib/notion/getNotionUsers'
-import { getBlogLink, getDateStr } from '../../lib/blog-helpers'
+import { getDateStr } from '../../lib/blog-helpers'
 import BlogLayout from '../../containers/Blog/layout'
-
-// Get the data for each blog post
-export async function unstable_getStaticProps({ params: { slug } }) {
-  // load the postsTable so that we can get the page's ID
-  const postsTable = await getBlogIndex()
-  const post = postsTable[slug]
-
-  if (!post) {
-    console.log(`Failed to find post for slug: ${slug}`)
-    return {
-      props: {
-        redirect: '/blog',
-      },
-      revalidate: 5,
-    }
-  }
-  const postData = await getPageData(post.id)
-  post.content = postData.blocks
-
-  const { users } = await getNotionUsers(post.Authors || [])
-  post.Authors = Object.keys(users).map(id => users[id].full_name)
-
-  return {
-    props: {
-      post,
-    },
-    revalidate: 10,
-  }
-}
-
-// Return our list of blog posts to prerender
-export async function unstable_getStaticPaths() {
-  const postsTable = await getBlogIndex()
-  return Object.keys(postsTable).map(slug => getBlogLink(slug))
-}
 
 const listTypes = new Set(['bulleted_list', 'numbered_list'])
 
-const RenderPost = ({ post, redirect }) => {
+const RenderPost = ({ post, postsTable, slug, redirect }) => {
   let listTagName: string | null = null
   let listLastId: string | null = null
   let listChildren: React.ReactElement[] = []
@@ -67,15 +33,11 @@ const RenderPost = ({ post, redirect }) => {
   return (
     <>
       <Header titlePre={post.Page} />
-      <BlogLayout>
+      <BlogLayout postsTable={postsTable} slug={slug}>
         <div>
           <h1>{post.Page || ''}</h1>
-          {post.Authors.length > 0 && (
-            <div className="authors">By: {post.Authors.join(' ')}</div>
-          )}
-          {post.Date && (
-            <div className="posted">Posted: {getDateStr(post.Date)}</div>
-          )}
+          {post.Authors.length > 0 && <div>By: {post.Authors.join(' ')}</div>}
+          {post.Date && <div>Posted: {getDateStr(post.Date)}</div>}
 
           <hr />
 
@@ -123,7 +85,6 @@ const RenderPost = ({ post, redirect }) => {
               )
             }
 
-            console.log(`${type} - ${properties?.title}`)
             switch (type) {
               case 'page':
               case 'divider':
@@ -216,9 +177,8 @@ const RenderPost = ({ post, redirect }) => {
                   process.env.NODE_ENV !== 'production' &&
                   !listTypes.has(type)
                 ) {
-                  console.log('unknown type', type)
+                  break
                 }
-                break
             }
             return toRender
           })}
@@ -226,6 +186,30 @@ const RenderPost = ({ post, redirect }) => {
       </BlogLayout>
     </>
   )
+}
+
+RenderPost.getInitialProps = async ({ query }) => {
+  const slug = query.slug
+  const postsTable = (await axios.get('http://localhost:3000/api/post')).data
+  const post = postsTable[slug]
+
+  if (!post) {
+    return {
+      redirect: '/blog',
+    }
+  }
+
+  const postData = await getPageData(post.id)
+  post.content = postData.blocks
+
+  const { users } = await getNotionUsers(post.Authors || [])
+  post.Authors = Object.keys(users).map(id => users[id].full_name)
+
+  return {
+    post,
+    slug,
+    postsTable,
+  }
 }
 
 export default RenderPost

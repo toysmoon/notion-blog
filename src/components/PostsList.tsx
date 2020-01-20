@@ -10,18 +10,19 @@ interface PostItemProps {
 
 interface PostsListProps {
   posts: any
+  slug: string
 }
 
 const StyledWrapper = styled.ul`
+  height: 100%;
   li {
-    height: 150px;
+    height: calc(20% - 10px);
     border-bottom: solid 1px;
     cursor: pointer;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    text-align: left;
-    padding-left: 40px;
+    text-align: center;
   }
 `
 
@@ -31,7 +32,7 @@ const PostItem: FC<PostItemProps> = ({ post }) => (
   </Link>
 )
 
-const PostsList: FC<PostsListProps> = ({ posts }) => {
+const PostsList: FC<PostsListProps> = ({ posts, slug }) => {
   return (
     <StyledWrapper>
       {posts.map(post => (
