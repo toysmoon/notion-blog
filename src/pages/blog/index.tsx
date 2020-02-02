@@ -3,6 +3,7 @@ import Router from 'next/router'
 import Header from '../../components/header'
 import { useEffect } from 'react'
 import styled from 'styled-components'
+import { useMobileDetect } from '../../lib/hooks'
 
 const StyledNoPostWrapper = styled.div`
   height: 100%;
@@ -13,8 +14,9 @@ const StyledNoPostWrapper = styled.div`
 `
 
 const Blog = ({ posts }) => {
+  const device = useMobileDetect()
   useEffect(() => {
-    if (posts.length > 0) {
+    if (posts.length > 0 && device.isDesktop) {
       const slug = posts[0]
       Router.push(`/blog/${slug}`)
     }

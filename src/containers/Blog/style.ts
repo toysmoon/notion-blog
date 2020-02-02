@@ -10,6 +10,7 @@ export const StyledContent = styled.div`
   flex: 2;
   border-left: solid 1px;
   border-right: solid 1px white;
+  border-top: solid 1px black;
 `
 
 export const StyledWrapper = styled.div`

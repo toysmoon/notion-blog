@@ -16,20 +16,33 @@ const navItems: { label: string; page: string }[] = [
 
 const StyledNavigation = styled.ul`
   display: flex;
-  height: calc(100vh - 40px);
-  li {
-    flex: 1;
-    display: flex;
+  height: calc(100% - 40px);
+  @media (max-width: 768px) {
     flex-direction: column;
-    justify-content: center;
-    text-align: center;
-    cursor: pointer;
-    :hover {
-      text-decoration: underline;
+  }
+`
+
+const StyledList = styled.li`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  :hover {
+    text-decoration: underline;
+  }
+  @media (max-width: 768px) {
+    border-bottom: solid 1px;
+    :last-child {
+      border-bottom: none;
     }
   }
-  li + li {
+  @media (min-width: 769px) {
     border-left: solid 1px;
+    :first-child {
+      border-left: none;
+    }
   }
 `
 
@@ -40,7 +53,7 @@ const Index: NextPage<IndexProps> = () => {
       <StyledNavigation>
         {navItems.map(({ label, page }) => (
           <Link href={page}>
-            <li key={label}>{label}</li>
+            <StyledList key={label}>{label}</StyledList>
           </Link>
         ))}
       </StyledNavigation>

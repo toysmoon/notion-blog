@@ -48,10 +48,8 @@ export default ({ titlePre = '' }) => {
       </Head>
       <StyledNavigation>
         <Link href="/">
-          <li>SUNGJUNG BLOG</li>
+          <li>SUNGJUNG</li>
         </Link>
-        <li></li>
-        <li></li>
       </StyledNavigation>
     </StyledHedaer>
   )
