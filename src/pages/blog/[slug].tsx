@@ -29,7 +29,7 @@ const RenderPost = ({ post, postsTable, slug, redirect }) => {
 
   return (
     <>
-      <Header titlePre={post.Page} />
+      <Header title={post.Page} />
       <BlogLayout postsTable={postsTable} slug={slug}>
         <div>
           <h1>{post.Page || ''}</h1>

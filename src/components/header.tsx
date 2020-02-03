@@ -1,41 +1,26 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import styled from 'styled-components'
 
 const ogImageUrl = 'https://notion-blog.now.sh/og-image.png'
 
-const StyledHedaer = styled.header`
-  height: 40px;
-`
-
-const StyledNavigation = styled.ul`
-  list-style: none;
+const StyledHeader1 = styled.h1`
   border-bottom: solid 1px;
-  display: flex;
-  align-items: center;
-  height: 40px;
-  li {
-    flex: 1;
-    font-size: 20px;
-    font-weight: bold;
-    line-height: 45px;
-    padding-left: 10px;
-    height: 40px;
-  }
-  li + li {
-    border-left: solid 1px;
-  }
-  :first-child {
-    cursor: pointer;
-  }
+  font-size: large;
+  height: 3rem;
+  line-height: 3rem;
+  padding-left: 0.5rem;
+  overflow: hidden;
+  box-sizing: border-box;
 `
 
-export default ({ titlePre = '' }) => {
+export default ({ title = null }) => {
   return (
-    <StyledHedaer>
+    <>
       <Head>
-        <title>{titlePre ? `${titlePre} |` : ''} Sungjung's Blog</title>
+        <title>
+          {title ? `${title} | Sungjung's Blog` : "Sungjung's Blog"}
+        </title>
         <meta
           name="description"
           content="An example Next.js site using Notion for the blog"
@@ -46,13 +31,11 @@ export default ({ titlePre = '' }) => {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:image" content={ogImageUrl} />
       </Head>
-      <StyledNavigation>
-        <Link href="/">
-          <li>SUNGJUNG BLOG</li>
-        </Link>
-        <li></li>
-        <li></li>
-      </StyledNavigation>
-    </StyledHedaer>
+      <Link href="/">
+        <StyledHeader1>
+          {title ? `${title} | Sungjung's Blog` : "Sungjung's Blog"}
+        </StyledHeader1>
+      </Link>
+    </>
   )
 }
