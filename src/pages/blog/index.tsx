@@ -1,33 +1,26 @@
 import api from '../../lib/api'
-import Router from 'next/router'
 import Header from '../../components/header'
-import { useEffect } from 'react'
-import styled from 'styled-components'
-import { useMobileDetect } from '../../lib/hooks'
+import styled, { css } from 'styled-components'
+import PostsList from '../../components/PostsList'
 
-const StyledNoPostWrapper = styled.div`
+const StyledListWrapper = styled.div`
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
 `
 
 const Blog = ({ posts }) => {
-  const device = useMobileDetect()
-  useEffect(() => {
-    if (posts.length > 0 && device.isDesktop) {
-      const slug = posts[0]
-      Router.push(`/blog/${slug}`)
-    }
-  }, [posts])
-
   return (
     <>
-      <Header titlePre="Blog" />
-      <StyledNoPostWrapper>
-        <p>Loading...</p>
-      </StyledNoPostWrapper>
+      <Header title="List" />
+      <StyledListWrapper>
+        {posts.length === 0 && <p>There are no posts yet</p>}
+        {posts.length > 0 && (
+          <PostsList
+            posts={posts}
+            back={{ label: '👈🏻', url: '/' }}
+            grid={true}
+          />
+        )}
+      </StyledListWrapper>
     </>
   )
 }
@@ -35,7 +28,9 @@ const Blog = ({ posts }) => {
 Blog.getInitialProps = async ({ req }) => {
   const isServer = !!req
   const postsTable = await api.get(`/api/post`, isServer)
-  const posts = Object.keys(postsTable)
+  const posts = Object.keys(postsTable).map(key => ({
+    ...postsTable[key],
+  }))
 
   return { posts }
 }

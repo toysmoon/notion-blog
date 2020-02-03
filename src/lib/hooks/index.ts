@@ -1,3 +1,3 @@
-import useMobileDetect from './useMobileDetect'
+import useDeviceDetect from './useDeviceDetect'
 
-export { useMobileDetect }
+export { useDeviceDetect }

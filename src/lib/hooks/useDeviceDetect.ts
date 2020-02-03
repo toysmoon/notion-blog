@@ -18,7 +18,7 @@ const getMobileDetect = userAgent => {
     isIos,
   }
 }
-const useMobileDetect = () => {
+const useDeviceDetect = () => {
   const [device, setDevice] = useState(getMobileDetect(defaultUserAgent))
   useEffect(() => {
     setDevice(getMobileDetect(navigator.userAgent))
@@ -26,4 +26,4 @@ const useMobileDetect = () => {
   return device
 }
 
-export default useMobileDetect
+export default useDeviceDetect

@@ -10,10 +10,13 @@ export const StyledContent = styled.div`
   flex: 2;
   border-left: solid 1px;
   border-right: solid 1px white;
-  border-top: solid 1px black;
+  @media (max-width: 768px) {
+    border-left: none;
+    border-right: none;
+  }
 `
 
 export const StyledWrapper = styled.div`
   display: flex;
-  height: calc(100% - 40px);
+  height: calc(100% - 3rem);
 `
