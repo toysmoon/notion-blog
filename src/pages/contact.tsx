@@ -31,7 +31,7 @@ const contacts = [
 
 export default () => (
   <>
-    <Header titlePre="Contact" />
+    <Header title="Contact" />
     <div>
       <div>
         <img src="/avatar.png" alt="avatar with letters JJ" height={60} />
