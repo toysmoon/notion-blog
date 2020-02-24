@@ -30,7 +30,7 @@ const RenderPost = ({ post, postsTable, slug, redirect }) => {
   return (
     <>
       <Header title={post.Page} />
-      <BlogLayout postsTable={postsTable} slug={slug}>
+      <BlogLayout>
         <div>
           <h1>{post.Page || ''}</h1>
           {post.Date && <div>Posted: {getDateStr(post.Date)}</div>}

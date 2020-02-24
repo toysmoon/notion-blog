@@ -2,28 +2,21 @@ import Link from 'next/link'
 import { NextPage } from 'next'
 import Header from '../components/header'
 import styled from 'styled-components'
-import { useDeviceDetect } from '../lib/hooks'
 import api from '../lib/api'
+import PostsList from '../components/PostsList'
 
 interface IndexProps {
-  firstPost: any
+  posts: any
 }
-
-const navItems: { label: string; page: string }[] = [
-  { label: 'about', page: '/about' },
-  { label: 'blog', page: '/blog' },
-  { label: 'contact', page: '/contact' },
-]
 
 const StyledNavigation = styled.ul`
   display: flex;
-  height: calc(100% - 3rem);
-  @media (max-width: 768px) {
-    flex-direction: column;
-  }
+  border-top: solid 1px black;
+  border-bottom: solid 1px black;
 `
 
 const StyledList = styled.li`
+  padding: 0.5rem;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -34,24 +27,13 @@ const StyledList = styled.li`
   :hover {
     text-decoration: underline;
   }
-  @media (max-width: 768px) {
-    border-bottom: solid 1px;
-    :last-child {
-      border-bottom: solid 1px white;
-    }
-  }
-  @media (min-width: 769px) {
-    border-left: solid 1px;
-    :first-child {
-      border-left: solid 1px white;
-    }
+  border-right: solid 1px black;
+  :last-of-type {
+    border-right: solid 0.5px white;
   }
 `
 
-const Index: NextPage<IndexProps> = ({ firstPost }) => {
-  const device = useDeviceDetect()
-  const blogHref =
-    firstPost && device.isDesktop ? `/blog/${firstPost}` : `/blog`
+const Index: NextPage<IndexProps> = ({ posts }) => {
   return (
     <>
       <Header />
@@ -59,13 +41,12 @@ const Index: NextPage<IndexProps> = ({ firstPost }) => {
         <Link href="/about">
           <StyledList>about</StyledList>
         </Link>
-        <Link href={blogHref}>
-          <StyledList>blog</StyledList>
-        </Link>
         <Link href="/contact">
           <StyledList>contact</StyledList>
         </Link>
       </StyledNavigation>
+      {posts.length === 0 && <p>There are no posts yet</p>}
+      {posts.length > 0 && <PostsList posts={posts} />}
     </>
   )
 }
@@ -73,8 +54,11 @@ const Index: NextPage<IndexProps> = ({ firstPost }) => {
 Index.getInitialProps = async ({ req }) => {
   const isServer = !!req
   const postsTable = await api.get(`/api/post`, isServer)
-  const firstPost = Object.keys(postsTable)[0]
-  return { firstPost }
+  const posts = Object.keys(postsTable).map(key => ({
+    ...postsTable[key],
+  }))
+
+  return { posts }
 }
 
 export default Index

@@ -3,15 +3,10 @@ import { createGlobalStyle } from 'styled-components'
 
 const GlobalStyle = createGlobalStyle`
   ${reset}
-  body {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    div#__next {
-      height: 100%;
-    }
+  html {
+    font-family: -apple-system,'BlinkMacSystemFont','Segoe UI','Roboto','Helvetica','Arial',sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol';
+    box-sizing: border-box;
+    overflow-y: scroll;
   }
 `
 export default GlobalStyle

@@ -13,13 +13,7 @@ const Blog = ({ posts }) => {
       <Header title="List" />
       <StyledListWrapper>
         {posts.length === 0 && <p>There are no posts yet</p>}
-        {posts.length > 0 && (
-          <PostsList
-            posts={posts}
-            back={{ label: '👈🏻', url: '/' }}
-            grid={true}
-          />
-        )}
+        {posts.length > 0 && <PostsList posts={posts} />}
       </StyledListWrapper>
     </>
   )

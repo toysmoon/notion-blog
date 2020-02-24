@@ -1,8 +1,5 @@
 import { postIsReady } from '../../lib/blog-helpers'
-import { useMemo } from 'react'
-import PostsList from '../../components/PostsList'
-import { StyledWrapper, StyledListWrapper, StyledContent } from './style'
-import { useDeviceDetect } from '../../lib/hooks'
+import { StyledWrapper, StyledContent } from './style'
 
 function getPostsDisplay(postsTable) {
   const authorsToGet: Set<string> = new Set()
@@ -24,18 +21,9 @@ function getPostsDisplay(postsTable) {
   return posts
 }
 
-const Blog = ({ postsTable, slug, children }) => {
-  const posts = useMemo(() => getPostsDisplay(postsTable), [postsTable])
-  const device = useDeviceDetect()
-
+const Blog = ({ children }) => {
   return (
     <StyledWrapper>
-      {device.isDesktop && (
-        <StyledListWrapper>
-          {posts.length === 0 && <p>There are no posts yet</p>}
-          {posts.length > 0 && <PostsList posts={posts} />}
-        </StyledListWrapper>
-      )}
       <StyledContent>{children}</StyledContent>
     </StyledWrapper>
   )

@@ -6,17 +6,7 @@ export const StyledListWrapper = styled.div`
 `
 
 export const StyledContent = styled.div`
-  overflow: scroll;
-  flex: 2;
-  border-left: solid 1px;
-  border-right: solid 1px white;
-  @media (max-width: 768px) {
-    border-left: none;
-    border-right: none;
-  }
+  padding: 0 1.5rem;
 `
 
-export const StyledWrapper = styled.div`
-  display: flex;
-  height: calc(100% - 3rem);
-`
+export const StyledWrapper = styled.div``
