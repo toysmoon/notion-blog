@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@zeit/react-jsx-parser": "^2.0.0",
-    "axios": "^0.19.1",
+    "axios": "^0.21.1",
     "dotenv": "^8.2.0",
     "github-slugger": "^1.2.1",
     "lodash": "^4.17.15",
